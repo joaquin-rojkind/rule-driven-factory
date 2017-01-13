@@ -14,11 +14,11 @@ public class CompositeRule<T, R> extends Rule<T, R> {
 
 	@Override
 	public boolean evaluate(T evaluable) {
-		boolean compliant = predicate.test(evaluable);
-		if (compliant) {
+		boolean evaluationResult = predicate.test(evaluable);
+		if (evaluationResult) {
 			this.evaluable = evaluable;
 		}
-		return compliant;
+		return evaluationResult;
 	}
 
 	@Override

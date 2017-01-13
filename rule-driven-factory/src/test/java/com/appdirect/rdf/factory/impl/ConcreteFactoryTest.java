@@ -6,19 +6,21 @@ import org.junit.Test;
 
 import com.appdirect.rdf.domain.CompliantObject;
 import com.appdirect.rdf.domain.EvaluableObject;
-import com.appdirect.rdf.domain.EvaluableObject.BlockNumber;
+import com.appdirect.rdf.domain.EvaluableObject.Block;
+import com.appdirect.rdf.domain.EvaluableObject.Level;
 import com.appdirect.rdf.factory.UnsupportedObjectException;
 
-public class ConcreteRuleDrivenFactoryTest {
+public class ConcreteFactoryTest {
 
 	@Test
 	public void testProvide_successLevel_1() throws UnsupportedObjectException {
 
 		EvaluableObject evaluable = new EvaluableObject()
-				.firstLevelMatch(BlockNumber.BLOCK_2)
-				.secondLevelMatch(BlockNumber.BLOCK_2);
+				.addMatcher(Level.LEVEL_1, Block.BLOCK_2)
+				.addMatcher(Level.LEVEL_2, Block.BLOCK_2)
+				.addMatcher(Level.LEVEL_3, Block.NO_MATCH);
 
-		CompliantObject compliantObject1 = ConcreteRuleDrivenFactory.getInstance().provide(evaluable);
+		CompliantObject compliantObject1 = ConcreteFactory.getInstance().provide(evaluable);
 		CompliantObject compliantObject2 = OldStyleFactory.getInstance().provide(evaluable);
 
 		assertThat(compliantObject1.getMessage()).isEqualTo("Second Level - Block 2");
@@ -29,9 +31,11 @@ public class ConcreteRuleDrivenFactoryTest {
 	public void testProvide_successLevel_2() throws UnsupportedObjectException {
 
 		EvaluableObject evaluable = new EvaluableObject()
-				.firstLevelMatch(BlockNumber.BLOCK_3);
+				.addMatcher(Level.LEVEL_1, Block.BLOCK_3)
+				.addMatcher(Level.LEVEL_2, Block.NO_MATCH)
+				.addMatcher(Level.LEVEL_3, Block.NO_MATCH);
 
-		CompliantObject compliantObject1 = ConcreteRuleDrivenFactory.getInstance().provide(evaluable);
+		CompliantObject compliantObject1 = ConcreteFactory.getInstance().provide(evaluable);
 		CompliantObject compliantObject2 = OldStyleFactory.getInstance().provide(evaluable);
 
 		assertThat(compliantObject1.getMessage()).isEqualTo("First Level - Block 3");
@@ -42,11 +46,11 @@ public class ConcreteRuleDrivenFactoryTest {
 	public void testProvide_successLevel_3() throws UnsupportedObjectException {
 
 		EvaluableObject evaluable = new EvaluableObject()
-				.firstLevelMatch(BlockNumber.BLOCK_2)
-				.secondLevelMatch(BlockNumber.BLOCK_1)
-				.thirdLevelMatch(BlockNumber.BLOCK_3);
+				.addMatcher(Level.LEVEL_1, Block.BLOCK_2)
+				.addMatcher(Level.LEVEL_2, Block.BLOCK_1)
+				.addMatcher(Level.LEVEL_3, Block.BLOCK_3);
 
-		CompliantObject compliantObject1 = ConcreteRuleDrivenFactory.getInstance().provide(evaluable);
+		CompliantObject compliantObject1 = ConcreteFactory.getInstance().provide(evaluable);
 		CompliantObject compliantObject2 = OldStyleFactory.getInstance().provide(evaluable);
 
 		assertThat(compliantObject1.getMessage()).isEqualTo("Third Level - Block 3");
@@ -56,9 +60,12 @@ public class ConcreteRuleDrivenFactoryTest {
 	@Test
 	public void testProvide_successDefault() throws UnsupportedObjectException {
 
-		EvaluableObject evaluable = new EvaluableObject();
+		EvaluableObject evaluable = new EvaluableObject()
+				.addMatcher(Level.LEVEL_1, Block.NO_MATCH)
+				.addMatcher(Level.LEVEL_2, Block.NO_MATCH)
+				.addMatcher(Level.LEVEL_3, Block.NO_MATCH);
 
-		CompliantObject compliantObject1 = ConcreteRuleDrivenFactory.getInstance().provide(evaluable);
+		CompliantObject compliantObject1 = ConcreteFactory.getInstance().provide(evaluable);
 		CompliantObject compliantObject2 = OldStyleFactory.getInstance().provide(evaluable);
 
 		assertThat(compliantObject1.getMessage()).isEqualTo("First Level - Block 3");
@@ -69,13 +76,14 @@ public class ConcreteRuleDrivenFactoryTest {
 	public void testProvide_failureNoMatch() throws UnsupportedObjectException {
 
 		EvaluableObject evaluable = new EvaluableObject()
-				.firstLevelMatch(BlockNumber.BLOCK_2)
-				.secondLevelMatch(BlockNumber.BLOCK_1);
+				.addMatcher(Level.LEVEL_1, Block.BLOCK_2)
+				.addMatcher(Level.LEVEL_2, Block.BLOCK_1)
+				.addMatcher(Level.LEVEL_3, Block.NO_MATCH);
 
 		CompliantObject compliantObject = OldStyleFactory.getInstance().provide(evaluable);
 
 		// OldStyleFactory returns a null object, no exception thrown.
 		assertThat(compliantObject).isNull();
-		ConcreteRuleDrivenFactory.getInstance().provide(evaluable);
+		ConcreteFactory.getInstance().provide(evaluable);
 	}
 }

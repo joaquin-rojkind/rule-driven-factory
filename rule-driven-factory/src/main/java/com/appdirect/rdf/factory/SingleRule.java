@@ -20,5 +20,4 @@ public class SingleRule<T, R> extends Rule<T, R> {
 	public R provideCompliantResult() {
 		return compliantResult;
 	}
-
 }

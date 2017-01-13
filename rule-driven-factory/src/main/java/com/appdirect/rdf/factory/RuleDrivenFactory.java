@@ -2,11 +2,11 @@ package com.appdirect.rdf.factory;
 
 import java.util.Optional;
 
-public abstract class AbstractRuleDrivenFactory<T, R> {
+public abstract class RuleDrivenFactory<T, R> {
 
 	private final Ruleset<T, R> ruleset;
 
-	protected AbstractRuleDrivenFactory() {
+	protected RuleDrivenFactory() {
 		this.ruleset = initializeRuleset();
 	}
 	

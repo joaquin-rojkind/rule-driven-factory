@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 public class Ruleset<T, R> {
 
 	private final List<Rule<T, R>> rules = new ArrayList<>();
-	
+
 	public Ruleset<T, R> addSingleRule(Predicate<T> predicate, R compliantResult) {
 		rules.add(new SingleRule<T, R>(predicate, compliantResult));
 		return this;
@@ -15,6 +15,11 @@ public class Ruleset<T, R> {
 
 	public Ruleset<T, R> addCompositeRule(Predicate<T> predicate, Ruleset<T, R> ruleSubset) {
 		rules.add(new CompositeRule<T, R>(predicate, ruleSubset));
+		return this;
+	}
+
+	public Ruleset<T, R> addDefaultRule(R defaultResult) {
+		rules.add(new DefaultRule<T, R>(defaultResult));
 		return this;
 	}
 

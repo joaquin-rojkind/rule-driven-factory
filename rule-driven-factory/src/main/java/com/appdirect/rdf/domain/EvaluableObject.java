@@ -1,50 +1,46 @@
 package com.appdirect.rdf.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class EvaluableObject {
 
-	private int firstLevelMatch;
-	private int secondLevelMatch;
-	private int thirdLevelMatch;
+	private final Map<Level, Block> matchers = new HashMap<>();
 
-	public enum BlockNumber {
+	public enum Level {
+		LEVEL_1(1), LEVEL_2(2), LEVEL_3(3);
 
-		BLOCK_1(1),BLOCK_2(2),BLOCK_3(3);
+		private int value;
 
-		private int number;
-
-		BlockNumber(int blockNumber) {
-			this.number = blockNumber;
+		Level(int level) {
+			this.value = level;
 		}
 
-		public int number() {
-			return number;
+		public int value() {
+			return value;
 		}
 	}
 
-	public EvaluableObject firstLevelMatch(BlockNumber blockNumber) {
-		this.firstLevelMatch = blockNumber.number();
+	public enum Block {
+		BLOCK_1(1), BLOCK_2(2), BLOCK_3(3), NO_MATCH(99);
+
+		private int value;
+
+		Block(int block) {
+			this.value = block;
+		}
+
+		public int value() {
+			return value;
+		}
+	}
+
+	public EvaluableObject addMatcher(Level level, Block block) {
+		matchers.put(level, block);
 		return this;
 	}
 
-	public EvaluableObject secondLevelMatch(BlockNumber blockNumber) {
-		this.secondLevelMatch = blockNumber.number();
-		return this;
-	}
-
-	public EvaluableObject thirdLevelMatch(BlockNumber blockNumber) {
-		this.thirdLevelMatch = blockNumber.number();
-		return this;
-	}
-
-	public int getFirstLevelMatch() {
-		return firstLevelMatch;
-	}
-
-	public int getSecondLevelMatch() {
-		return secondLevelMatch;
-	}
-
-	public int getThirdLevelMatch() {
-		return thirdLevelMatch;
+	public Block getMatcher(Level level) {
+		return matchers.get(level);
 	}
 }

@@ -6,6 +6,10 @@ public abstract class Rule<T, R> {
 
 	protected final Predicate<T> predicate;
 
+	public Rule() {
+		predicate = null;
+	}
+
 	public Rule(Predicate<T> predicate) {
 		this.predicate = predicate;
 	}
