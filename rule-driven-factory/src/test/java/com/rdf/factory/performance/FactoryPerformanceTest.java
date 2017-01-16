@@ -21,14 +21,17 @@ public class FactoryPerformanceTest {
 				.addMatcher(Level.LEVEL_2, Rule.RULE_1)
 				.addMatcher(Level.LEVEL_3, Rule.RULE_3);
 
+		ConcreteFactory.getInstance();
+		OldStyleFactory.getInstance();
+
 		long startTime1 = System.nanoTime();
-		for (int i = 0; i < 10000000; i++) {
+		for (int i = 0; i < 10000; i++) {
 			ConcreteFactory.getInstance().provide(evaluable);
 		}
 		long responseTime1 = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime1);
 
 		long startTime2 = System.nanoTime();
-		for (int i = 0; i < 10000000; i++) {
+		for (int i = 0; i < 10000; i++) {
 			OldStyleFactory.getInstance().provide(evaluable);
 		}
 		long responseTime2 = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime2);
